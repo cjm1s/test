@@ -1,0 +1,736 @@
+[리눅스 폴더 정보]
+/
+최상위 디렉터리, 리눅스 모든 디렉터리들의 시작점.
+
+/bin (CentOS7 이전) /usr/bin (CentOS7)
+기본 실행 명령어 (실행파일)가 저장되어있는 디렉토리 binaries
+
+/sbin (CentOS7 이전) /usr/sbin (CentOS7)
+시스템 명령어가 저장되어 있는 경로(관리자만 사용가능)system binaries, 시스템 관리를 위한 명령어 디렉토리(시스템 부팅, 복구, 보수 등등)
+
+/boot
+부팅 관련 파일 디렉토리리눅스 부트로더(boot loader)가 저장되어 있는 경로
+
+/etc
+시스템 설정 파일 디렉토리리눅스 시스템에 대한 서비스와 환경 설정과 관련된 파일이 저장되어 있는 경로.
+
+/mnt
+입출력 장치 연결 마운트 디렉토리mount directory, 입출력 장치 연결 마운트 디렉토리원격 장치파일을 사용하면 출력되는 경로.ex:) 블루투스, 와이파이
+
+/media
+임시 마운트 디렉토리CD/DVD, FDD, USB 등이 임시로 마운트 되는 역할을 수행하는 디렉토리로컬 장치파일을 사용하면 출력되는 경로.
+
+/usr
+시스템이 아닌 일반사용자가 사용하는 프로그램이 설치되는 경로윈도우 관련 시스템 관련 파일들과 리눅스 커널 소스, 각종 C언어 관련 헤더 파일 등(Windows 로 따지면 ProgramFiles 폴더정도.)
+
+/lib
+공유 라이브러리 디렉토리프로그램들의 각종 라이브러리들이 존재, 대부분이 공유 라이브러리들
+
+/lib (CentOS7 이전)/usr/lib (CentOS7)
+커널, 모듈, 라이브러리 파일들이 저장되어 있는 경로응용프로그램 설치시 일반 사용자 명령어가 추가됨
+
+/dev
+장치를 쓸때 필요한 특수 파일 위치
+
+/home 
+일반 사용자의 홈 디렉토리 
+
+/opt
+추가 소프트웨어 설치 디렉터리(리눅스 이외 소프트웨어들이 설치됨)
+
+/proc
+커널과 프로세스를 위한 가상 파일 시스템들이 저장되어 있는 경로 
+
+/root
+관리자 홈 디렉토리 
+
+/tmp 
+공용 디렉터리 및 임시 저장소
+
+/var시스템 운영중에 저장되는 자료가 저장되어 있는 경로(시스템 관련 로그log파일, 사용자 메일파일, 사용자 로그인 보안기록 등)/run계속 실행되고 있는 프로세스를 저장하고 있는 경로 /swap가상 메모리(파티션을 마치 메모리처럼 사용하게 함) 
+
+
+
+
+[CentOS7] 리눅스 기본1 -  명령어 모음 및 간단 설명리눅스 기초 강의 hostname
+▶때 정리해둔 명령어들
+
+▶컴퓨터 이름 호출
+hostname
+cat /etc/hostname
+
+▶arguments 다시 사용하기 (잘 활용하면 오타를 통해서 실수할 일이 안생김)
+뱅 딸러
+!$
+
+ex) 네트워크 설정 파일 보기
+cat /etc/sysconfig/network-scripts/ifcfg-enp0s3
+해당 아규먼트 활용
+VI !$
+
+
+pushd 폴더 기억하기
+popd 기억한 폴더 꺼내기
+
+
+▶인터넷 되는가
+ping 8.8.8.8
+▶화면 지우기
+clear또는 단축키 CTRL + L
+▶아이피 확인 : ifconfig
+▶아이피만 나오게 하기 : hostname -i
+▶yum update -y=> 기존 설치 패키지 업그레이드
+▶cat /etc/--release=> 버전정보 확인하기  ??
+▶sudo => 관리자 권한으로 명령하기(윈도우에서 ulc)
+    # sudo yum update -y
+    # sudo reboot
+▶history=> 썼던 명령어 전부 보여주기
+!! 직전명령어 실행
+!! | grep Linux 이전명령어에 쉽게 추가하기
+sudo !!     그냥 실행했다 실패해서 슈도 넣을때 좋음
+echo !! > script.sh 가끔 출력 결과를 파일이나 스크립트로 저장할 필요가 있을때가 있다. 
+    이런 경우 '!!'를 사용하여 반복을 피할 수 있다.
+▶ ! 이력번호
+!1093   이 명령어는 1093번 명령어를 재실행한다.(히스토리에서 확인가능)
+!^: 이전 명령어의 첫번째 argument이다.
+!$: 이전 명령어의 마지막 argument이다.
+!*: 이전 명령어의 전체 argument가 있다.
+응용 - 특정 명령어의 인수를 사용할 수 있다.     $ ls !ls:2
+▶ chmod g+rw/go+rwx testfile2
+chmod 777/766/744 testfile2
+▶ chown -R
+chown [소유주] [변경할 파일]
+chown [소유주] [변경할 디렉터리]
+chown [소유주]:[그룹] [변경할 디렉터리]
+▶ 파일의 그룹만 변경할때 사용 
+chgrp [그룹] [변경할 파일]
+▶ tar명령어  .tar  _tar로 된 파일을 묶거나 풀때 상요하는 명령어
+tar cvf [파일명(.tar, _tar)] 압축할 파일(또는 디렉토리): 묶을 때
+tar xvf [파일명(.tar, _tar)] : 풀 때
+    xzf
+▶ gzip명령어 .gz  .z 형태의 압축파일 생성
+gzip [파일명] : 압축시
+gzip -d [파일명]: 해제시
+▶ compress명령어  : 확장자 .Z 형태의 압축파일 생성
+compress [파일명] : 압축시
+uncompress [파일명]: 해제시
+▶ grep명령어    : 특정 파일에서 지정한 문자열이나 정규표현식을 포함한 행을 출력해주는 명령어입니다.
+    grep [옵션][패턴][파일명]
+# 특정 파일에서 'error' 문자열 찾기
+    grep 'error' 파일명
+# 여러개의 파일에서 'error' 문자열 찾기
+    grep 'error' 파일명1 파일명2
+# 현재 디렉토리내에 있는 모든 파일에서 'error' 문자열 찾기
+    grep 'error' *
+# 특정 확장자를 가진 모든 파일에서 'error' 문자열 찾기
+    grep 'error' *.log
+    주요 옵션
+        c : 일치하는 행의 수를 출력한다.
+        i : 대소문자를 구별하지 않는다.
+        v : 일치하지 않는 행만 출력한다.
+        n : 포함된 행의 번호를 함께 출력한다.
+        l : 패턴이 포함된 파일의 이름을 출력한다.
+        w : 단어와 일치하는 행만 출력한다.
+        x : 라인과 일치하는 행만 출력한다.
+        r : 하위 디렉토리를 포함한 모든 파일에서 검색한다.
+        m 숫자 : 최대로 표시될 수 있는 결과를 제한한다.
+        E : 찾을 패턴을 정규 표현식으로 찾는다.
+        F : 찾을 패턴을 문자열로 찾는다.
+실시간 로그 보기 (tail + grep)
+tail -f mylog.log | grep 192.168.15.86
+mylog파일을 실시간으로 액세스하고 IP주소가 192.168.49.16인 행만 추출
+특정 파일에서 여러개 문자열 찾기
+cat mylog.txt | grep 'Apple' | grep 'Banana'
+
+▶ find명령어
+find [옵션] [경로] [표현식]
+find . -name "*log*"
+find . -name 'air*'
+    주요 옵션
+        P : 심볼릭 링크를 따라가지 않고, 심볼릭 링크 자체 정보 사용.
+        L : 심볼릭 링크에 연결된 파일 정보 사용.
+        H : 심볼릭 링크를 따라가지 않으나, Command Line Argument를 처리할 땐 예외.
+        D : 디버그 메시지 출력.
+    표현식
+        name : 해당 이름의 파일을 찾음. 해당 이름에는 정규 표현식을 활용할 수 있음
+        type : 지정된 파일 타입에 해당하는 파일 검색
+        user : 해당 유저에게 속한 파일 검색
+        empty : 빈 디렉토리 혹은 크기가 0인 파일 검색
+        delete : 검색된 파일 혹은 디렉토리 삭제
+        exec : 검색된 파일에 대해 지정된 명령 실행
+        path : 지정된 문자열 패턴에 해당하는 경로에서 검색.
+        print : 검색 결과를 출력. 검색 항목은 newline으로 구분. (기본 값)
+        print0 : 검색 결과를 출력. 검색 항목은 null로 구분.
+        size : 파일 크기를 사용하여 파일 검색.
+        mindepth : 검색을 시작할 하위 디렉토리 최소 깊이 지정.
+        maxdepth : 검색할 하위 디렉토리의 최대 깊이 지정.
+        atime : n일 이내에 액세스된 파일을 찾음.
+        ctime : n일 이내에 만들어진 파일을 찾음.
+        mtime : n일 이내에 수정된 파일을 찾음.
+        cnewer file : 해당 파일보다 최근에 수정된 파일을 찾음.
+    d : 디렉토리
+    f : 일반적인 파일
+    l : 심볼릭 링크
+파일 크기로 찾기 (-empty, -size)
+# 현재 디렉토리에서 빈 디렉토리이거나 크기가 0인 파일 검색
+find . -empty
+# 현재 디렉토리에서 test가 들어가는 빈 디렉토리이거나 크기가 0인 파일 검색하여 삭제
+find . -name "*test*" -empty -delete
+# 현재 디렉토리에서 1024byte인 파일 검색
+find . -size 1024c
+# 현재 디렉토리에서 1024byte보다 큰 파일 검색
+find . -size +1024c
+# 현재 디렉토리에서 1024byte보다 작은 파일 검색
+find . -size -1024c
+# 현재 디렉토리에서 1kb보다 크고 10kb보다 작은 파일 검색
+find . -size +1k -size -10k
+    b : 블록단위
+    c : byte
+    k : kbyte
+    w : 2byte 워드
+exec를 사용하여 검색한 대상에 추가 명령어를 수행
+# 현재 디렉토리에 "test"가 들어가는 파일을 찾아서 상세정보 출력
+find . -name "*test*" -exec ls -l {} \;
+# 현재 디렉토리에 있는 파일에서 "test"가 들어가는 내용 찾기 
+find . -type f -exec grep "test" {} \;
+# 현재 디렉토리에 ".txt" 확장자를 찾아서 모두 삭제
+find . -name "*.txt" -exec rm {} \;
+
+▶which명령어 which / whereis / locate /apropos 유틸리티 위치 검색
+
+▶grep명령어 : 파일명 또는 파일내 문자열 검색
+    -r 하위디렉토리까지 모두 검색
+    -l 파일내의 텍스트와 패턴이 매치되는 텍스트를 출력하지 말고 매칭된 파일목록만 출력
+    -L -l옵션과 반대로 비매칭된 파일목록 출력
+▶kill명령어 kill PID
+kill PID : 무조건 강제종료시키기보다 서버에서 종료ㅣ 자원정리 시간을 주자
+kill -9 PID : 9번 시그널을 프로세스에 보내 프로세스를 강제 종료한다. (9번 시그널은 강제 종료 신호)
+pkill -x CMD : kill과 달리 PID가 아니라 프로세스의 명령 이름(CMD)로 프로세스를 찾아 종료.
+
+    -15 프로세스에게 보내어 DB접속 및 각종 아직 커밋이 되지 않은 정보를 안전하게 저장할수있도록 
+        기회를 줌. 이 시그널이 무반응시에만 강제 시그널(-TERM)
+    -1 재시작 시그널 (-HUP)
+
+▶mount
+추가된 디스트 Volume 확인
+sudo fdisk -l
+파일시스템 생성
+sudo mkfs.ext4 /dev/vdb
+mount 받을 디렉토리 생성
+sudo mkdir /bluexmas_db
+mount 하기
+sudo mount /dev/vdb /bluexmas_db
+mount 확인
+df -h
+unmount 하기
+sudo umount /bluexmas_db
+unmount 확인
+df -h
+
+▶최신 도커 깔기
+curl -sSL http://get.docker.com | sh    웹써버에 있는 스크립트를 설치할때 이렇게 많이 해.
+
+▶tail => 끝에서 10줄 봄
+tail /var/log/yum.log
+
+▶도커 실행
+systemctl start docker
+docker pull centos
+docker run =it centos /bin/bash
+
+▶용량 확인
+df
+df -h : 더 깔끔하게 나옴
+
+▶다른 컴퓨터 붙는거 (ssh 클라이언트, 윈도우엔 없다 window10에선 내장)
+ssh root@10.0.2.5
+ssh 10.0.2.5 -l adminuser -p 22
+ssh 10.0.2.5
+
+▶접속 계정 바꾸가
+su [계정이름]
+
+▶매뉴얼 (ex)
+man uname | grep \\-n
+man uname | grep \\-r
+man hostname | grep || -I
+man hostname | grep || -i
+
+▶restart 서비스들 (데몬같은거)대신 재시작이니까 붙어있는것들 다 죽는다.
+ex) systemctl restart network
+
+▶reload 쓸때가 있다 구성파일만 적용시킬때
+
+▶서비스 검색 해보기 (서비스명 찾기)
+systemctl list-unit-files | grep ssh
+
+▶ su => 유저변경!!
+ex) su root => 루트 계정으로 바꾸기
+ex) su adminuser => 또 바꾸기
+ex) su => 안넣어주면 default가 root다
+
+▶ su - => 아예 다시 로그인 하기,
+ex) su - root
+ex) su - adminroot
+
+▶whoami => 접속 유저확인
+
+▶su - root
+보통 user 계정으로 들어와서 보기만하다 su 를 통해 root 계정으로 접근하여 작업을 많이 함.(보안상)
+
+▶이전 경로 cd -
+
+▶홈 경로 cd ~
+
+▶루트 경로 cd /
+
+▶grep => 글자를 찾고 그행 전체 반환
+
+▶히스토리를 파일로 저장하기
+history > mycommand.list
+
+▶ vi 편집기 명령어
+shift ZZ => 저장하고 빠져나가기
+dd => 한줄 지우기
+i => 입력하기
+esc => 나가기
+esc : w
+esc : wq, x
+qw!
+
+▶CONSOLE작업
+ - 로마의 집정관
+ - 명령을 내리는 사람
+ - 직접 마우스 키보드로 명령어 내리는 것
+
+▶
+who : 지금 내 머신에 누가 접속해있냐
+whoami : 현재 어떤 사용자냐
+who am i : 최초로 로그인 한 사용자
+pts : sudo 터미널, 가짜 터미널, virtual 터미널
+
+▶package 설치 => program => 실행 => process
+ps : 현재 자신 세션에서만 실행한 프로세스
+ps a : 자신의 id로 접속한 모든 터미널에서 실행중인 모든 프로세스
+ps aux : 현재 시스템에 로그온한 모든 사용자가 실행한 전체 프로시스
+--abc
+--ab-d
+-a
+-a -b -c
+-abc
+
+▶ 
+$는 Bash를 이용하는 "일반 사용자"
+#은 "root"
+sudo root
+cat /etc/group | grep wheel 
+위와 같이 하면 휠 그룹 정보를 알고 싶다. 관리자 계정인지를 알 수 있다.
+(ex 다음과 같이해도, id adminuser)
+
+▶ ~의 의미
+로그인한 유저의 홈 디렉토리 : 그 유저만의 공간, 다른유저 사용 불가
+root에서 ls -l ~adminuser를 치면 adminuser계정의 홈 디렉토리를 볼 수 있다.
+
+▶ pwd present working directory, print working directory, 현재디렉토리
+
+▶ !yum => 이전명령어의 yum으로 시작하는것, !p => 이전명령어의 p로 시작하는것!을 통해 짧게 명령어 사용
+
+▶ ls -al
+ls -l /tmpman ls | grep \\-l
+
+▶ ; 세미콜론으로 명령어 구분 가능
+세미콜론 : two thoughts bc, 즉 다르다. 구분한다.
+ex : who;date;ifconfig
+
+▶ 파일에 대한 권한이 있음(권한 확인)
+ex)touch ismi.file
+ls -l ismi.file     소유자, 그룹, 그 외 모든것-rw-r--r--.  1 root root 0
+
+▶ 리눅스 명령어의 특징
+명령어 및 파일에 확장자가 없다.
+파일 종류를 알기 위해 => file 파일명
+ex) file /etc/hostname => ASCII text
+file /etc/passwd => ASCII text
+file /bin/ls ~~~~~~~~
+
+▶ passwd 로그인한 사용자가 자신의 계정 비번 재설정, 또는 관리자가 다른 계정에 대해 암호 재설정
+passwd
+passwd adinuser
+passwd imsiuser
+
+▶ who --help
+
+▶  Terminal 종료하기
+Ctrl + d, exit
+
+▶ RunLevel 이해하기
+ - centos7부터 runlevel을 systemd가 담당,
+ - runlevel이란 시스템을 어떤 수준으로 운영할 것인지 결정하는 것 다양한 runlevel이 있다
+ - runlevel 종류 및 목록 확인하기
+   1. ls -l /lib/systemd/system | grep runlevel
+   2. who -r 로도 확인 가능
+ - 디폴트 Runlevel 확인 및 설정
+   1. default runlevel : 시스템이 시작할 때 자동으로 설정되는 runlevel 값
+   2. default runlevel 확인하기
+     systemctl get-default
+   3. default runlevel 변경하기
+     systemctl set-default multi-user.target
+     shutdown -r now
+     systemctl get-default
+ - 런레벨 변경하기 : telinit 3
+ - 런레벨 1은 관리자만 사용. 모든접속자 끊고 root만 사용 (현업에서 바꿀 일은 없을듯)
+
+▶ System 종료하기
+shutdown [옵션] [시간] [메시지]
+옵션들
+ -k : 실제로 시스템 종료하지 않고 사용자들한테 메시지만 전다.
+ -r : 종료 후 재시작
+ -h : 종료하고 halt 상태로 이동
+ -f : 빠른재시작으로 이 과정에서 fsck를 생략할 수도 있다
+ -c : 이전에 내렸던 shutdown 명령을 취소
+ 시간 : 종료할 시간 (hh:mm, +m, now)
+ 메시지 : 모든 사용자에게 보낼 메시지
+ex)- 지금당장 시스템 종료하기
+    shutdown -h now
+- 지금당장 시스템 재부팅하기
+    shutdown -r now
+- 10분 후에 종료하기
+    shutdown -h + 10
+
+▶ systemd, systemctl
+systemd 명령어 사용하기
+systemctl 명령어를 통해 systemd를 제어한다.
+명령어들 쭉 있음.
+systemctl start httpd : 시작
+systemctl enable httpd : 재부팅후에도 시작할 필요없이 됨
+systemctl list-unit-unit-files | grep enabled
+다른 pc에서 접속 하려고 해보면 안됨 그럼 firewall꺼주자 (d 끝에붙임 d는 데몬을 뜻함)
+systemctl stop firewalld
+꺼졌나 확인하는 다음 명령어 둘다 외우자
+systemctl is-active firewalld
+systemctl status firewalld
+서비스 명들 찾기 어려우니까 다음과 같이 찾자
+systemctl list-unit-file | grep 서비스명
+시스템 시작시 오류난 것만 확인 systemctl --failed
+
+▶ /var/log/yum.log: 설치 된 파일들 로그 볼 수 있음
+
+▶ ls명렁어 는 교재
+ls -lt 시간순
+ls -ltr 시간 역순
+ls -la 전체 숨김파일까지
+ls -lF 파일종류 표시
+ls -ld (##pwd의 정보)
+ls -l 파일들의 상세정보 표시
+ls -t 파일들 생성된 시간별(최신부터) 표시
+ls -a 숨겨진파일도 표시
+ls -rt 파일들을 오래된 시간부터 표시
+ls -F 파일을 표시할 때 마지막에 유형을 나타내는 파일명을 끝에 표시
+    '/' 디렉토리 '*' 실행파일 '@' 링크
+컴파일시 수정시간에따라 안될 경우 touch로 수정시간 변경 하여 사용하기도 함.
+-r : recurse 하위
+-R : reverser 거꾸로 역순으로
+
+▶ touch명령어 : 파일의 용량이 0인 파일을 생성, 날짜 변경하는 명령어
+touch filename  : 파일네임의 파일을 생성
+touch -c filename   : 파일네임의 시간을 현재시간으로 변경
+touch -t 200001011200 filename  : 파일네임의 시간을 날짜정보(YYYYMMDDhhmm)로 변경
+touch -r filename1 filename2    : 파일네임2의 날짜정보를 파일네임1의 날짜정보와 같게 변경
+
+▷특수문자{}
+touch new_file{1,2,3}   : new_file1 new_file2 new_file3 을 생성한다.
+▷특수문자?  셀에게 파일명을 생성케하는 특수문자. 이 문자는 기존의 파일명에 있는 문자를 하나에 해당
+▷특수문자*  물음표와 비슷한 기능을 수행하지만, 어떤 개수의 문자열에라도 대응될 수 있다는점
+▷특수문자[]
+echo new_dir[13]  셀이 각각문자를 포함하는 파일명을 검색[1-3]    : 1,3  1,2,3
+
+▷특수문자&  마지막에 붙이면 백그라운드에서 실행
+
+
+
+▶ 디렉토리 만들기 mkdir명령어
+ex)mkdir /lab
+mkdir /lab/data/movies
+안만들어짐 이때 p를 써서 없는경우 부모부터 만들기 옵션 가능
+mkdir -p /lab/data/movies
+mk -m 644 dirname   : 특정 퍼미션을 갖는 디렉토리를 생성
+
+▶ cp명령어          ▶ mv명령어 cp와 거의 동일
+cp file cfile   : 파일을 c파일이라는 이름으로 복사
+cp -f file cfile    : 복사할 때 복사대상이 있으면 지우고 강제로 복사(이동?)
+mv -f file cfile    : 이동할때 백업없이 덮어쓰기
+cp -R dir cdir      : 디렉토리 복사할때 사용하며, 폴더안 모든 하위경로와 파일 모두 복사
+mv -b file cfile    : c파일이 존재하면 c파일을 백업한 뒤 이동할때
+
+▶ rm명령어
+rm fname    : f네임을 삭제
+rm -f fname     : f네임을 묻지 않고 삭제
+rm -r dir       : dir을 삭제(-r 없이는 삭제 불가)
+
+▶ cat명령어(concaternate) : 여러 파일 연결하다, 파일 내용 연속 출력하기 파일들 연결 가능
+cat /etc/hosts /etc/hostname
+파일 편집하기
+1. vi yslee.list
+2. (첨가하기) cat > yslee.list
+   ctrl D(저장하기)
+▶ 화면단위로 파일 내용 출력 : more
+   이전 화면으로 이동 : ctrl + b
+   다음 화면으로 이동 : ctrl + f   
+▶ 개선된 화면단위 파일 출력 : less
+   한줄씩 이동 j, 인줄씩 이전행 k, 화살표사용
+find . -name "*.txt" |
+find . -name "*.txt" | xargs touch
+cat fname   : f네임의 내용을 출력
+cat fname1 fname2   : fname1과 fname2의 내용을 이어서 출력
+cat fname1 fname2 | more    : fname1과 fname2의 내용을 페이지별로 출력
+cat fname1 fname2 | head    : fname1과 fname2의 내용을 처음부터 10번째 줄까지만 출력
+cat fname1 fname2 | tail    : fname1과 fname2의 내용을 끝부터 10번째 줄까지만 출력
+
+▶ redirection('>', '>>') '>'오버라이트'>>'어펜드
+cat fname1 fname2 > fname3 : fname1,fname2 를 출력하고 fname3 이라는 파일에 저장합니다.
+cat fname4 >> fname3 : fname3 에 fname4 의 내용을 추가합니다.
+cat < fname1 : fname1 의 내용을 출력합니다.
+cat < fname1 > fname2 : fname1 의 내용을 출력하는 결과물을 fname2 에 저장합니다.
+
+▶ alias명령어   : 자주 사용하는 명령어를 간단한 명령어로 설정하는 명령어
+alias new = 'command' : command 를 실행하는 새 명령어 new 를 만듭니다.
+ex) alias ls='ls -l' : ls 를 실행하면 -l 옵션을 갖는 ls를 실행합니다.
+★ 새로 사용자 생성useradd 유저명
+CentOS 등 레드햇 계열에서는 아무 옵션을 주지 않아도 홈 디렉토리 생성되고 쉘 환경이 설정됨
+.으로 시작하는 파일은 숨김파일
+유저를 새로 만들면 /etc/skel/의 파일들을 디폴트로 홈 디렉토리로 가져온다.
+★ 사용자 계정 수정하기
+홈디렉토리를 바꾸고싶을때
+ex)먼저 폴더 생성한다
+mkdir /home/user3
+usermod -d /lab/home/user3 user3
+★ 사용자 계정 삭제하기
+userdel user3
+userdel -rf user3
+★ 권한주기
+휠 권한 주기 : usermod -aG wheel user3
+결과 확인 : gruops user3
+★ -Yum을 이용한 Package 설치하기
+저장소
+-store => 실제 저장소
+-repository => 목록
+-save => 메모리상에 돌고 있는걸 디스크로 저장(전원 꺼지면 이거 가지고 복구)
+-archive => 겨울 옷 압축해서 저장하고 있는 것 같은거
+yum install epl-release -y
+yum list avaliable : 설치 가능한 모든 패키지 목록
+yum list updatesyum list installed : 이미 설치된 패키지 목록
+rpm -qc nginx
+★ package 정보 검색하기
+yum info bind
+yum provides bind
+★ package 삭제하기
+yum remove bind
+★ package 업데이트
+yum update => 전체
+yum update bind => 특정 패키지
+★ 설치된 package 목록 확인하기
+yum list installed
+yum list installed | grep ssh
+rpm -qa | grep ssh
+ps -ef | grep ssh (실행중 프로세스 찾기)
+find / -name samba (원하는 파일 찾기)
+★ gui버전 으로 설치
+"Server With GUI"
+★ Yum Repository 확인
+yum repolist enabled
+★ 파일 Archive
+★ Tar(Tape Archive) 명령어
+다시 시스템과 파일을 주고받거나백업을 하기 위해 여러 개의 파일이나 디렉터리를 
+하나의 Archive file로 만듥나 또는 기존의 Archive에서 파일을 추출하기 위해 사용하는 명령어.
+★ 파일 Archive 하기
+tar cvf file.tar dir1
+C : createV : 처리중인 파일의 이름을 화면에 상세히 출력
+F : archive 파일을 사용하겠다.
+이걸 가장 많이 사용함.
+tar cvzf lab.tar.gz /lab
+Archive 파일 내용 보기
+tar tvf lab.tar
+원상복구 하기
+tar xvzf /lab.tar.gz /tmp
+
+
+
+▶ps명령어
+- 현재 셸이나 터미널에서 실행한 사용자 프로세스의 정보를 출력
+  - 출력정보 PID : 프로세스 번호
+  - 출력정보 TTY : 현재 터미널 번호
+  - 출력정보 TIME : 해당 프로세스가 사용한 CPU 시간의 양
+  - 출력정보 CMD : 프로세스가 실행 중인 명령
+- 주요 옵션
+  - `ps au`   : 터미널에서 실행한 프로세스의 상세 정보 출력
+    - 출력정보 USER : 사용자 계정 이름
+    - 출력정보 PID : 프로세스 번호
+    - 출력정보 %CPU : CPU 사용량을 퍼센트로 표시
+    - 출력정보 %MEM : 물리적 메모리 사용량을 퍼센트로 표시
+    - 출력정보 VSZ : 사용하고 있는 가상 메모리 크기(KB)
+    - 출력정보 RSS : 사용하고 있는 물리적 메모리의 크기(KB)
+    - 출력정보 TTY : 터미널 번호
+    - 출력정보 STAT : 프로세스의 상태(필요하면 상태 나타내는 주요 문자의 의미 정리)
+    - 출력정보 START : 프로세스 시작 시간
+    - 출력정보 TIME : 해당 프로세스의 CPU 사용 시간
+    - 출력정보 COMMAND : 프로세스가 실행 중인 명령
+  - `ps ax | more`   : 시스템에서 실행 중인 모든 프로세스 출력(너무 많아 프로세스 목록을 제대로 확인하기 힘드므로, more 명령 함께 사용)
+  - `ps aux | more`   : 시스템에서 실행 중인 모든 프로세스의 자세한 정보 출력
+  - `ps -fu user`   : 특정 사용자(여기선 user)가 실행한 프로세스의 목록 확인
+    - 출력정보 PPID : 부모 프로세스의 PID 번호
+    - 출력정보 C : CPU 사용량(% 값) 
+    - 출력정보 STIME : 프로세스의 시작 날짜나 시간
+ 
+>[특정 프로세스 정보 검색하기]
+- `ps -ef | grep 명령`  : ps명령을 통한 특정 프로세스 정보 검색. 사용 예) ps -ef | grep bash (배시 셸에 대한 정보 검색) 
+- `ps -fp $(pgrep -x 명령)` : pgrep 명령을 이용해 특정 프로세스 정보 검색 (pgrep로 검색하려는 프로세스의 PID를 찾아 ps 명령으로 자세한 정보를 확인)
+
+ 
+yum update 모든 패키지 갱신 apt apt-get
+yum install 패키지 설치
+yum remove 패키지 삭제
+yum list vimtutor 패키지 목록 조회
+yum serch vimtutor 유틸리티 이름으로 검색
+yum provides vimtutor 패키지 내에서 제공하는 파일명 검색
+yum  provide *./vimtotor 패키지,서브디렉토리까지 검색
+
+
+curl    wget(간단하고 별다른 옵션없을때 사용)과 비슷
+curl명령어는 프로토콜들을 이용해 URL 로 데이터를 전송하여 서버에 데이터를 보내거나 가져올때 사용하기 위한 명령줄 도구 및 라이브러리
+-k  --insecure  https 프로토콜에서 SSL 인증서에 대한 검증없이 연결
+-i  --head  HTTP 헤더만 보여주고 컨텐츠는 표시하지 않음
+-D  --dump-header <file>    HTTP 헤더를 file에 기록 (덤프)
+-L  --location  HTTP 301, 302 응답을 받은 경우 리디렉션 URL로 따라간다. --max-redirs 옵션 뒤에 숫자로 몇 번의 리디렉션까지 따라갈 것인지를 적을 수 있다. 기본 값은 50이다.
+-d  --data  HTTP POST 요청 데이터 입력
+-J  --remote-header-name    헤더에 있는 파일 이름으로 다운로드 파일을 저장
+-o  --output FILE   curl로 받아온 내용을 FILE 이라는 이름의 파일로 저장
+-O  --remote-name   파일 저장시 리모트에 저장되어 있던 이름을 그대로 가져와서 로컬에 저장
+-s  --silent    진행 내용이나 메시지들을 출력하지 않음HTTP response code 만 가져오거나 할 경우 유리
+-X  --request   요청시 사용할 메소드의 종류 (GET, POST, PUT, PATCH, DELETE)
+-i  --include   응답에 Content 만 출력하지 않고 서버의 Reponse 도 포함해서 출력한다. (디버깅에 유용)
+-A  --user-agent    서버에 User-Agent <name> 보내기
+-u  --user  서버 사용자 및 비밀번호
+-T  --upload-file   로컬 FILE 을 대상으로 전송
+-f  --fail      HTTP 오류 시 자동으로 실패 (출력 없음)
+-G  전송할 사이트 url 및 ip 주소    
+-H  전송할 헤더를 지정      
+-J  --remote-header-name    어떤 웹서비스는 파일 다운로드시 Content-Disposition Header 를 파싱해야 정확한 파일이름을 알 수 있을 경우가 있다. -J 옵션을 주면 헤더에 있는 파일 이름으로 저장한다.
+-v  --verbose       동작하면서 자세한 헤더 통신 옵션을 출력한다.
+-C  --continue-at   파일 다운로드 재개
+
+아무 옵션을 적지 않은 경우 기본적으로 GET으로 동작
+$ curl www.example.com
+$ curl -X GET www.example.com
+
+POST 요청
+-d 옵션으로 body 파라미터를 앞에 쓰고, 그 뒤에 POST를 처리하는 주소를 넣는다.
+파라미터는 무조건 먼저 인코딩 된 상태여야 한다.
+POST의 기본 Content-Type 은 application/x-www-form-urlencoded 이다. 
+
+# url 형식 데이터
+$ curl -d "key1=value1&key2=value2" \ 
+-H "Content-Type: application/x-www-form-urlencoded" \ 
+-X POST http://localhost:8000/data 
+# -d 옵션으로 body 데이터를 기재
+# -H 옵션으로 전송할 헤더 지정 (디폴트 : application/x-www-form-urlencoded)
+# -X 옵션으로 POST 메소드 지정하고 요청할 url명시
+
+# JSON 형식 데이터
+$ curl -d '{"key1":"value1", "key2":"value2"}' \
+-H "Content-Type: application/json" \
+-X POST http://localhost:8000/data
+
+# 파라미터값을 파일로 지정해서 보내기
+
+curl -d "@data.txt" -X POST http://localhost:3000/data
+curl -d "@data.json" -X POST http://localhost:3000/data
+data.json
+{
+    "key1":"value1",
+    "key2":"value2"
+}
+data.txt
+param1=value1&param2=value2
+
+$ curl -X PUT -d 'name=inpa&email=inpa@gmail.com' http://localhost:8080/user/100
+$ curl -X PUT -H "Content-Type: application/json" -d '{"name":"inpa","email":"inpa@gmail.com"}' http://localhost:8080/user/100
+
+# 파일명으로 PUT
+$ curl -T filename.txt http://www.example.com/dir/
+
+$ curl -X DELETE http://localhost:8080/user/100
+
+# 헤더정보 보기 -I
+$ curl -I google.com
+
+# 헤더 + 본문 보기 -i
+$ curl -i google.com
+
+# 요청/응답을 자세히
+$ curl -v www.example.com
+
+
+$ curl -e http://리퍼러주소 daniel.haxx.se
+
+# Firefox 60을 에뮬레이트하는 경우
+curl -A "Mozilla/5.0 (X11; Linux x86_64; rv:60.0) Gecko/20100101 Firefox/60.0" https://getfedora.org/
+
+# 여러파일 다운로드
+$ curl -O URL1 -O URL2
+
+$ curl -O http://mirrors.edge.kernel.org/archlinux/iso/2018.06.01/archlinux-2018.06.01-x86_64.iso \
+     -O https://cdimage.debian.org/debian-cd/current/amd64/iso-cd/debian-9.4.0-amd64-netinst.iso
+
+# 범위 지정 - foo0.txt 부터 foo9.txt 파일 다운 받기
+$ curl -O http://example.com/foo[0-9].txt
+
+# []는 여러 번 조합가능하고, foo-a0 ~ foo-z9까지의 파일 다운
+$ curl -O http://example.com/foo-[a-z][0-9].txt
+
+# 중괄호 {}를 써서 foo.txt, bar.txt, baz.txt를 다운
+$ curl -O http://example.com/{foo,bar,baz}.txt
+
+# for 문으로 여러 파일 다운로드 
+$ files="foo bar baz" # files 라는 환경변수에 파일명 할당
+$ for name in $files; do
+> curl -O "http://example.com/${name}.txt"
+> done
+
+
+
+커맨드 줄 의 처음/끝으로 이동 ( ctrl + A / E )
+
+한 라인 지우기 단축키 조합
+- Ctrl+E 치고 Ctrl+U (커서를 맨 끝으로 옮기고 왼쪽부분 모두 삭제)
+- Ctrl+A 치고 Ctrl+K (커서를 맨 처음으로 옮기고 오른쪽 부분 모두 삭제)
+
+여러 명령 연달아 실행 ( ; )
+
+&&는 이전 명령이 성공한 경우에만 다음 명령이 실행되도록 한다.
+$ sudo apt update && sudo apt upgrade # 업데이트가 성공하면 업그레이드
+
+
+리눅스 터미널 프로그램에서 간혹 Ctrl + s 키를 누르는 경우가 있다.
+이 키를 누르게 되면 터미널이 먹통(?)이 되는 현상이 나타나는데, 해결 하는 방법은 Ctrl + q 를 누르면 간단하게 해결된다.
+
+실시간으로 로그 파일 읽기 ( tail -f )
+$ tail -f 로그파일
+grep 명령어와 함꼐 사용하여 의미 있는 행만 표시할 수도 있다.
+$ tail -f 로그파일 | grep search_term
+
+파일의 내용을 보려면 특히 큰 파일인 경우 cat이나 vi 에디터로 보기보단, less 명령어가 좋은 선택이 된다.
+
+$ yes | 명령어 # 파이프를 이용
+일부 명령어는 로그 동작 중간에 Y나 N을 요구한다.
+이러한 사용자 상호 작용이 필요할 때마다 Y를 입력하지말고 아예 처음부터 자동으로 Y로 인식하도록 지정해줄 수도 있다.
+
+파일 내용물 비우기 ( > filename )
+
+특정 텍스트가 포함된 파일이 있는지 확인 ( grep -Pri )
+특정 텍스트가 포함된 파일이 있는지 한번에 확인하려는 경우 쏠쏠히 사용할수 있다.
+$ grep -Pri Search_Term path_to_directory
+
+
+
+
+

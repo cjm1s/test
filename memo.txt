@@ -1,0 +1,129 @@
+
+
+RFC 1918 범위 CIDR 블록의 예
+10.0.0.0 - 10.255.255.255 (10/8 접두사) // 10.0.0.0/16
+172.16.0.0 - 172.31.255.255 (172.16/12 접두사)  // 172.31.0.0/16
+192.168.0.0 - 192.168.255.255 (192.168/16 접두사) // 192.168.0.0/20
+
+일부 AWS 서비스는 172.17.0.0/16 CIDR 범위를 사용함
+
+서브넷 마스크/네트워크 개수/ 1개의 네트워크당 IP 개수 
+
+0 1 256 
+128 2 128 
+192 4 64 
+224 8 32 
+240 16 16 
+248 32 8 
+252 64 4 
+254 128 2 
+255 256 1 
+
+
+
+vpc  23p   서브넷팅 검색
+
+VPC 구성
+퍼블릭 서브넷 구성
+프라이빗 서브넷 구성
+
+퍼블릭 서브넷 인스턴스 - 네트워크 구성(vpc), 서브넷 연결(퍼블릭) . 서브넷 사용설정(활성화)
+프라이빗 서브넷 인스턴스 - 네트워크 구성(vpc), 서브넷 연결(프라이빗) . 서브넷 사용설정(비활성화)
+	프라이빗인스턴스는 공인 아이피가 없음
+
+라우팅 테이블
+	(기본적으로 각 서브넷은 라우팅테이블에 vpc랑 연결된 라우팅테이블이 있음(10.0.0.0/16))
+
+인터넷 게이트웨이 생성
+	선택 후 vpc에 연결
+	라우팅 테이블> 라우팅테이블 생성(퍼블릭용/프라이빗용)
+		서브넷 연결 편집 > (퍼블릭/프라이빗) 구분해서 연결 저장
+	퍼블릭 라우팅 테이블 > 라우팅 편집 > (기본으로 되있는건 냅두고)
+	라우팅 추가 > 0.0.0.0/0  > 인터넷 게이트웨이(기본 제외 모든 트래픽 외부 연결)
+
+NAT 게이트웨이(프라이빗서브넷이 외부로나갈수있게(들어오지못함) 퍼블릭 서브넷에 생성)
+	인터넷 게이트웨이를 거쳐 나가며 탄력적 아이피 주소를 할당해야한다
+
+	프라이빗 서브넷 라우팅 추가 > 0.0.0.0/0  > NAT 게이트웨이
+
+Bastion Host : private 서브넷에 연결되어 접속할수있는 public 서브넷을 그냥 Bastion Host라고 일컫는 것
+	관리자가 Bastion Host으로 SSH 연결을 한 후 Bastion Host에서 Private Subnet의 Host에
+	SSH 연결을 하는 형태로 Private Subnet에 접근할 수 있게 된다.
+	퍼블릭 인스턴스 생성시 보안그룹
+		SSH / ICMP 모두 0.0.0.0/0
+	프라이빗 인스턴스 생성시 보안그룹 > 퍼블릭에서 만든 보안그룹 선택
+
+퍼블릭 ssh 접속해서 프라이빗인스턴스로 ping 해보자
+
+$ chmod 600 my_private_keypair.pem
+$ ssh -i my_private_keypair.pem ec2-user@<private 인스턴스 사설IP>
+
+
+NOSQL 데이터베이스에는 다음과 같은 네 가지 주요 유형이 있습니다
+
+Document databases : JSON 또는 XML 파일과 유사한 문서에 데이터를 저장합니다.
+대표적으로 MongoDB가 있습니다.
+Key-value databases : 각 키가 값에 매핑되는 단순 키 값 형식으로 데이터를 저장합니다.
+대표적으로 Redis가 있습니다.
+Column-family databases : 데이터를 행이 아닌 열에 저장하여 읽기 및 쓰기 성능을 향상시킬 수 있습니다.
+대표적으로 Apache Cassandra와 Hbase가 있습니다.
+Graph databases : 그래프 구조에서 데이터를 노드 및 에지로 저장하여 복잡한 관계를 더 쉽게 모델링할 수 있습니다.
+대표적으로 Amazon Neptune이 있습니다.
+
+
+
+
+cala> val amazondynamodb_df = spark.sqlContext.read.format("jdbc").option("url", "jdbc:amazondynamodb:Access Key=xxx;Secret Key=xxx;Domain=amazonaws.com;Region=OREGON;").option("dbtable","Lead").option("driver","cdata.jdbc.amazondynamodb.AmazonDynamoDBDriver").load()
+
+
+
+
+import os
+import findspark
+from pyspark.sql.functions import regexp_replace
+from pyspark.sql.types import IntegerType
+from pyspark.sql.functions import col, when
+from pyspark.sql import SparkSession
+import boto3
+
+# import environment variables
+
+aws_table_name = os.environ.get("aws_table_name")
+aws_access_id = os.environ.get("aws_access_id")
+aws_secret_id = os.environ.get("aws_secret_id")
+region = os.environ.get("region")
+
+spark = SparkSession.builder \
+    .appName("RealEstateProject") \
+    .config("spark.jars.packages", "com.amazonaws:aws-java-sdk-bundle:1.11.375") \
+    .getOrCreate()
+findspark.init()
+file_location = "/home/vs/Documents/python/real_estate_project/toronto_real_estate.csv"
+file_type = "csv"
+
+infer_schema = "true"
+first_row_is_header = "true"
+delimiter = ","
+
+df = spark.read.format(file_type) \
+  .option("inferSchema", infer_schema) \
+  .option("header", first_row_is_header) \
+  .option("sep", delimiter) \
+  .load(file_location)
+
+# remove all non-numerical special characters
+df = df.withColumn("price", regexp_replace("price", "[^0-9]", ""))
+df = df.withColumn("address", regexp_replace("address", "[^a-zA-Z0-9 -]", ""))
+
+# change the price column data type to integer
+df = df.withColumn("price", df["price"].cast(IntegerType()))
+
+# Get the current column names
+old_columns = df.columns
+
+# Create a list of new column names in title case
+new_columns = [col_name.title() for col_name in old_columns]
+
+# Rename the columns using withColumnRenamed()
+df = df.select([col(old_col_name).alias(new_col_name) for old_col_name, new_col_name in zip(old_columns, new_columns)])
+
